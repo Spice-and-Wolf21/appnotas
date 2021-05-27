@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        -formulario {
+            display: flex;
+            flex-flow: row;
+        }
+        .formulario > div * {
+            display: block;
+        }
+    </style>
+    <section>
+        <form id="formulario" class="formulario">
+            <div>
+                <label>titulo</label>
+                <input name="titulo" type="text">
+            </div>
+            <div>
+                <label>descripcion</label>
+                <textarea name="descripcion"></textarea>
+            </div>
+            <div>
+                <label>fecha inicio</label>
+                <input name="fecha_inicio" type="date">
+            </div>
+            <div>
+                <label>fecha fin</label>
+                <input name="fecha_fin" type="date">
+            </div>
+            <div>
+                <input type="submit" value="Enviar">
+            </div>
+        </section>
+    </form>
+    <div id="lista_tareas"></div>
+    <script type="module">
+        import Elementos from "./elementos.js";
+        let lista_tareas
+        document.getElementById('formulario').addEventListener('submit', guardarNotas)
+
+        function iniciar(){
+            lista_tareas = JSON.parse(window.localStorage.getItem('lista_tareas')) || []
+            mostrarTareas()
+        }
+        function mostrarTareas(){
+            const lista = []
+            const contenedor = document.getElementById('lista_tareas')
+            lista_tareas.map(e => {
+                lista.push({contenido: e.titulo})
+            })
+            console.log(lista_tareas)
+            const elemento = Elementos.agregarTareas(lista)
+            contenedor.innerHTML = ''
+            contenedor.appendChild(elemento)
+        }
+        function guardarNotas(e){
+            e.preventDefault()
+            const titulo = e.target.titulo.value
+            const descripcion = e.target.descripcion.value
+            const fecha_inicio = e.target.fecha_inicio.value
+            const fecha_fin = e.target.fecha_fin.value
+            lista_tareas.push({
+                titulo, descripcion, fecha_inicio, fecha_fin
+            })
+            window.localStorage.setItem('lista_tareas', JSON.stringify(lista_tareas))
+            mostrarTareas()
+        }
+        window.onload = () => {
+            iniciar()
+        }
+    </script>
+</body>
+</html>
